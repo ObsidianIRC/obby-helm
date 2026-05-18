@@ -1,0 +1,19 @@
+apiVersion: v2
+name: obby
+description: Obby IRC stack -- obbyircd + obby-api + web client
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - irc
+  - obby
+  - unrealircd
+  - chat
+home: https://github.com/ObsidianIRC
+sources:
+  - https://github.com/ObsidianIRC/ObbyIRCd
+  - https://github.com/ObsidianIRC/hosted-backend
+  - https://github.com/ObsidianIRC/ObsidianIRC
+  - https://github.com/ObsidianIRC/obby-stack
+maintainers:
+  - name: ObsidianIRC

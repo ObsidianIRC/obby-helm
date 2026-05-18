@@ -1,0 +1,60 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "obby.fullname" . }}
+  labels:
+    {{- include "obby.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts: [{{ .Values.global.ircFqdn | quote }}]
+      secretName: {{ default (printf "%s-irc-tls" (include "obby.fullname" .)) .Values.ingress.tls.secretName | quote }}
+    - hosts: [{{ .Values.global.apiFqdn | quote }}]
+      secretName: {{ default (printf "%s-api-tls" (include "obby.fullname" .)) .Values.ingress.tls.secretName | quote }}
+    {{- if .Values.obbyWeb.enabled }}
+    - hosts: [{{ .Values.global.webFqdn | quote }}]
+      secretName: {{ default (printf "%s-web-tls" (include "obby.fullname" .)) .Values.ingress.tls.secretName | quote }}
+    {{- end }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.global.ircFqdn | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "obby.fullname" . }}-obbyircd
+                port:
+                  number: {{ .Values.obbyircd.service.wsPort }}
+    - host: {{ .Values.global.apiFqdn | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "obby.fullname" . }}-obby-api
+                port:
+                  number: {{ .Values.obbyApi.service.httpPort }}
+    {{- if .Values.obbyWeb.enabled }}
+    - host: {{ .Values.global.webFqdn | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "obby.fullname" . }}-obby-web
+                port:
+                  number: {{ .Values.obbyWeb.service.port }}
+    {{- end }}
+{{- end }}

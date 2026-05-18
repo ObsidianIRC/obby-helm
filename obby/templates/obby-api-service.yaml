@@ -1,0 +1,40 @@
+{{- if .Values.obbyApi.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "obby.fullname" . }}-obby-api
+  labels:
+    {{- include "obby.componentLabels" (dict "component" "obby-api" "Release" .Release "Chart" .Chart "Values" .Values) | nindent 4 }}
+spec:
+  type: {{ .Values.obbyApi.service.type }}
+  selector:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: obby-api
+  ports:
+    - name: http
+      port: {{ .Values.obbyApi.service.httpPort }}
+      targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "obby.fullname" . }}-obby-api-turn
+  labels:
+    {{- include "obby.componentLabels" (dict "component" "obby-api" "Release" .Release "Chart" .Chart "Values" .Values) | nindent 4 }}
+  {{- with .Values.obbyApi.turnService.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.obbyApi.turnService.type }}
+  selector:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: obby-api
+  ports:
+    - name: turn
+      port: {{ .Values.obbyApi.turnPort }}
+      protocol: UDP
+      targetPort: turn
+{{- end }}

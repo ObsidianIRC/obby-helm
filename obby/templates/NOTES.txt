@@ -1,0 +1,28 @@
+Obby stack deployed.
+
+IRC:   {{ .Values.global.ircFqdn }}{{ if .Values.obbyircd.service.sslPort }} (TLS port {{ .Values.obbyircd.service.sslPort }} in-cluster){{ end }}
+API:   {{ .Values.global.apiFqdn }}
+{{- if .Values.obbyWeb.enabled }}
+Web:   {{ .Values.global.webFqdn }}
+{{- end }}
+
+To watch the IRCd come up:
+
+  kubectl -n {{ .Release.Namespace }} logs -f \
+    statefulset/{{ include "obby.fullname" . }}-obbyircd
+
+The TURN UDP port ({{ .Values.obbyApi.turnPort }}) needs to be reachable
+from clients.  The chart provisions a `{{ .Values.obbyApi.turnService.type }}`
+service for it; verify your cluster actually routes UDP to it
+(LoadBalancer is the simplest reliable choice).
+
+First-run oper credentials:
+{{- if .Values.obbyircd.operPassword }}
+  username: {{ .Values.obbyircd.operName }}
+  password: (the value you set in values.yaml)
+{{- else }}
+  Auto-generated.  Find it in the pod log:
+    kubectl -n {{ .Release.Namespace }} logs \
+      {{ include "obby.fullname" . }}-obbyircd-0 \
+      | grep -A1 "Generated oper credentials"
+{{- end }}

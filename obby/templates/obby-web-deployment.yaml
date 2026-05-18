@@ -1,0 +1,73 @@
+{{- if .Values.obbyWeb.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "obby.fullname" . }}-obby-web
+  labels:
+    {{- include "obby.componentLabels" (dict "component" "obby-web" "Release" .Release "Chart" .Chart "Values" .Values) | nindent 4 }}
+spec:
+  replicas: {{ .Values.obbyWeb.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: obby-web
+  template:
+    metadata:
+      labels:
+        {{- include "obby.componentLabels" (dict "component" "obby-web" "Release" .Release "Chart" .Chart "Values" .Values) | nindent 8 }}
+      {{- with .Values.obbyWeb.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: obby-web
+          image: "{{ .Values.obbyWeb.image.repository }}:{{ default .Chart.AppVersion .Values.obbyWeb.image.tag }}"
+          imagePullPolicy: {{ .Values.obbyWeb.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          {{- with .Values.obbyWeb.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.obbyWeb.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.obbyWeb.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.obbyWeb.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "obby.fullname" . }}-obby-web
+  labels:
+    {{- include "obby.componentLabels" (dict "component" "obby-web" "Release" .Release "Chart" .Chart "Values" .Values) | nindent 4 }}
+spec:
+  type: {{ .Values.obbyWeb.service.type }}
+  selector:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: obby-web
+  ports:
+    - name: http
+      port: {{ .Values.obbyWeb.service.port }}
+      targetPort: http
+{{- end }}

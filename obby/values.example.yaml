@@ -1,0 +1,62 @@
+# Annotated example values.  Copy to a private file, fill in, install with:
+#   helm install obby ./obby -f my-values.yaml -n obby --create-namespace
+
+global:
+  ircFqdn: irc.example.com
+  apiFqdn: api.example.com
+  webFqdn: chat.example.com
+  network: ObbyNetwork
+  adminEmail: admin@example.com
+  imagePullSecrets: []
+
+obbyircd:
+  enabled: true
+  image:
+    repository: mattfly/obbyircd
+    tag: "v0.1.0"
+  replicas: 1
+  operName: admin
+  operPassword: "CHANGE-ME"
+  motdText: "Welcome to Obby"
+  # Generate three independent keys, each 96 random a-zA-Z0-9 chars.
+  # tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 96
+  cloakKey1: "REPLACE-WITH-96-CHAR-RANDOM-STRING"
+  cloakKey2: "REPLACE-WITH-96-CHAR-RANDOM-STRING"
+  cloakKey3: "REPLACE-WITH-96-CHAR-RANDOM-STRING"
+  rpcPassword: "REPLACE-WITH-SECRET"
+  persistence:
+    data:
+      size: 10Gi
+      storageClass: "fast"
+
+obbyApi:
+  enabled: true
+  image:
+    repository: mattfly/obby-api
+    tag: "v0.1.0"
+  jwtSecret: "REPLACE-WITH-openssl-rand-hex-32"
+  ircServerKey: "REPLACE-WITH-openssl-rand-hex-32"
+  turnSecret: "REPLACE-WITH-openssl-rand-hex-32"
+  turnPort: 3478
+  voicePublicIp: "203.0.113.5"     # public ingress IP for WebRTC
+  voiceMaxRoom: 25
+  filehostPublicUrl: "https://files.example.com"
+  turnService:
+    type: LoadBalancer
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb
+
+obbyWeb:
+  enabled: true
+  image:
+    repository: mattfly/obby
+    tag: "v0.1.0"
+  replicas: 2
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  tls:
+    enabled: true

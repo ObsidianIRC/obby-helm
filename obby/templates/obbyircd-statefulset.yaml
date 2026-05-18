@@ -1,0 +1,106 @@
+{{- if .Values.obbyircd.enabled -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "obby.fullname" . }}-obbyircd
+  labels:
+    {{- include "obby.componentLabels" (dict "component" "obbyircd" "Release" .Release "Chart" .Chart "Values" .Values) | nindent 4 }}
+spec:
+  serviceName: {{ include "obby.fullname" . }}-obbyircd
+  replicas: {{ .Values.obbyircd.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: obbyircd
+  template:
+    metadata:
+      labels:
+        {{- include "obby.componentLabels" (dict "component" "obbyircd" "Release" .Release "Chart" .Chart "Values" .Values) | nindent 8 }}
+      {{- with .Values.obbyircd.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: obbyircd
+          image: "{{ .Values.obbyircd.image.repository }}:{{ default .Chart.AppVersion .Values.obbyircd.image.tag }}"
+          imagePullPolicy: {{ .Values.obbyircd.image.pullPolicy }}
+          ports:
+            - name: ssl
+              containerPort: {{ .Values.obbyircd.ports.ssl }}
+            - name: ws
+              containerPort: {{ .Values.obbyircd.ports.ws }}
+            - name: rpc
+              containerPort: {{ .Values.obbyircd.ports.rpc }}
+          env:
+            - name: SERVER_NAME
+              value: {{ include "obby.serverName" . | quote }}
+            - name: NETWORK_NAME
+              value: {{ .Values.global.network | quote }}
+            - name: ADMIN_EMAIL
+              value: {{ .Values.global.adminEmail | quote }}
+            - name: OPER_NAME
+              value: {{ .Values.obbyircd.operName | quote }}
+            - name: OPER_MASK
+              value: {{ .Values.obbyircd.operMask | quote }}
+            - name: MOTD_TEXT
+              value: {{ .Values.obbyircd.motdText | quote }}
+            - name: SSL_PORT
+              value: {{ .Values.obbyircd.ports.ssl | quote }}
+            - name: WS_PORT
+              value: {{ .Values.obbyircd.ports.ws | quote }}
+            - name: RPC_PORT
+              value: {{ .Values.obbyircd.ports.rpc | quote }}
+            - name: FILEHOST_URL
+              value: {{ .Values.obbyircd.filehostUrl | quote }}
+          envFrom:
+            - secretRef:
+                name: {{ include "obby.fullname" . }}-obbyircd
+          volumeMounts:
+            - name: conf
+              mountPath: /home/obbyircd/obby/conf
+            - name: data
+              mountPath: /home/obbyircd/obby/data
+            - name: logs
+              mountPath: /home/obbyircd/obby/logs
+            - name: tls
+              mountPath: /home/obbyircd/obby/tls
+            - name: custom-modules
+              mountPath: /home/obbyircd/obby/custom-modules
+            - name: voice-bridge
+              mountPath: /run/obbyirc
+          readinessProbe:
+            tcpSocket:
+              port: ws
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          {{- with .Values.obbyircd.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: voice-bridge
+          emptyDir: {}
+        {{- range $name, $_ := .Values.obbyircd.persistence }}
+        - name: {{ $name | kebabcase }}
+          persistentVolumeClaim:
+            claimName: {{ include "obby.fullname" $ }}-obbyircd-{{ $name | kebabcase }}
+        {{- end }}
+      {{- with .Values.obbyircd.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.obbyircd.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.obbyircd.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

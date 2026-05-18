@@ -1,0 +1,23 @@
+name: Helm chart lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.16.4
+      - name: helm lint
+        run: helm lint obby
+      - name: helm template (default values)
+        run: helm template obby ./obby > /tmp/rendered.yaml && head -50 /tmp/rendered.yaml
+      - name: helm template (example values)
+        run: helm template obby ./obby -f ./obby/values.example.yaml > /tmp/rendered-example.yaml && head -50 /tmp/rendered-example.yaml

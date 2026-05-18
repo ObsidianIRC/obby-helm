@@ -1,0 +1,114 @@
+# Default values for the obby chart.  See README + values.example.yaml.
+
+global:
+  ircFqdn: irc.example.com
+  apiFqdn: api.example.com
+  webFqdn: chat.example.com
+  network: ObbyNetwork
+  adminEmail: admin@example.com
+  imagePullSecrets: []
+
+obbyircd:
+  enabled: true
+  image:
+    repository: mattfly/obbyircd
+    tag: ""        # default: chart appVersion
+    pullPolicy: IfNotPresent
+  replicas: 1
+  serverName: ""   # default: global.ircFqdn
+  operName: admin
+  operPassword: ""    # leave empty to auto-generate on first run
+  operMask: "*"
+  motdText: "Welcome to Obby"
+  cloakKey1: ""    # >=80 mixed [a-zA-Z0-9]
+  cloakKey2: ""
+  cloakKey3: ""
+  rpcPassword: ""  # shared with obby-api
+  filehostUrl: ""
+  ports:
+    ssl: 6697
+    ws: 8080
+    rpc: 8600
+  service:
+    type: ClusterIP
+    sslPort: 6697
+    wsPort: 8080
+  persistence:
+    conf:
+      size: 100Mi
+      storageClass: ""
+    data:
+      size: 5Gi
+      storageClass: ""
+    logs:
+      size: 1Gi
+      storageClass: ""
+    tls:
+      size: 50Mi
+      storageClass: ""
+    customModules:
+      size: 100Mi
+      storageClass: ""
+  resources: {}
+  podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+obbyApi:
+  enabled: true
+  image:
+    repository: mattfly/obby-api
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 1
+  jwtSecret: ""
+  ircServerKey: ""
+  turnSecret: ""
+  turnPort: 3478
+  turnRealm: obby
+  voicePublicIp: ""
+  voiceMaxRoom: 25
+  filehostPublicUrl: ""
+  service:
+    type: ClusterIP
+    httpPort: 8080
+  turnService:
+    type: LoadBalancer    # TURN needs public UDP
+    annotations: {}
+  persistence:
+    data:
+      size: 5Gi
+      storageClass: ""
+    images:
+      size: 20Gi
+      storageClass: ""
+  resources: {}
+  podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+obbyWeb:
+  enabled: true
+  image:
+    repository: mattfly/obby
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  service:
+    type: ClusterIP
+    port: 80
+  resources: {}
+  podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  tls:
+    enabled: true
+    secretName: ""    # blank = per-host auto-generated names
