@@ -54,6 +54,10 @@ spec:
               value: "admin"
             - name: FILEHOST_PUBLIC_URL
               value: {{ .Values.obbyApi.filehostPublicUrl | quote }}
+            {{- if .Values.obbyircd.voiceTurn.external.urls }}
+            - name: VOICE_TURN_DISABLE_EMBEDDED
+              value: "1"
+            {{- end }}
           envFrom:
             - secretRef:
                 name: {{ include "obby.fullname" . }}-obby-api

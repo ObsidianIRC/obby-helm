@@ -25,6 +25,19 @@ obbyircd:
   cloakKey3: ""
   rpcPassword: ""  # shared with obby-api
   filehostUrl: ""
+
+  # External TURN service (recommended if you already run coturn).
+  # When .urls is set, the IRCd rewrites the SFU's "joined" envelope
+  # with HMAC creds for these URLs (draft-uberti-behave-turn-rest).
+  # Leave empty to fall back to obbyApi's embedded pion/turn.
+  voiceTurn:
+    external:
+      urls: []              # e.g. ["turn:turn.example.com:3478?transport=udp"]
+      sharedSecret: ""      # coturn static-auth-secret
+      sharedSecretRef:      # alternative: pull from existing k8s Secret
+        name: ""
+        key: ""
+      ttl: 21600
   ports:
     ssl: 6697
     ws: 8080

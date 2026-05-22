@@ -58,6 +58,27 @@ spec:
               value: {{ .Values.obbyircd.ports.rpc | quote }}
             - name: FILEHOST_URL
               value: {{ .Values.obbyircd.filehostUrl | quote }}
+            {{- with .Values.obbyircd.voiceTurn.external }}
+            {{- if .urls }}
+            - name: VOICE_TURN_EXTERNAL_URLS
+              value: {{ join " " .urls | quote }}
+            - name: VOICE_TURN_TTL
+              value: {{ .ttl | quote }}
+            {{- if and .sharedSecretRef .sharedSecretRef.name }}
+            - name: VOICE_TURN_SHARED_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .sharedSecretRef.name }}
+                  key: {{ .sharedSecretRef.key | default "VOICE_TURN_SHARED_SECRET" }}
+            {{- else if .sharedSecret }}
+            - name: VOICE_TURN_SHARED_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "obby.fullname" $ }}-obbyircd
+                  key: VOICE_TURN_SHARED_SECRET
+            {{- end }}
+            {{- end }}
+            {{- end }}
           envFrom:
             - secretRef:
                 name: {{ include "obby.fullname" . }}-obbyircd
