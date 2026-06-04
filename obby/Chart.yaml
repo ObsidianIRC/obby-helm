@@ -9,11 +9,11 @@ keywords:
   - obby
   - unrealircd
   - chat
-home: https://github.com/ObsidianIRC
+home: https://github.com/obbyworld
 sources:
   - https://github.com/obbyworld/ObbyIRCd
   - https://github.com/obbyworld/hosted-backend
   - https://github.com/obbyworld/obby
   - https://github.com/obbyworld/obby-stack
 maintainers:
-  - name: ObsidianIRC
+  - name: obbyworld

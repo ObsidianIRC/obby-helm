@@ -1,6 +1,6 @@
 # obby-helm
 
-Helm chart for deploying the [Obby](https://github.com/ObsidianIRC) stack
+Helm chart for deploying the [Obby](https://github.com/obbyworld) stack
 on Kubernetes. The Docker Compose equivalent lives in
 [obby-stack](https://github.com/obbyworld/obby-stack).
 
