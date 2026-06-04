@@ -11,9 +11,9 @@ keywords:
   - chat
 home: https://github.com/ObsidianIRC
 sources:
-  - https://github.com/ObsidianIRC/ObbyIRCd
-  - https://github.com/ObsidianIRC/hosted-backend
-  - https://github.com/ObsidianIRC/ObsidianIRC
-  - https://github.com/ObsidianIRC/obby-stack
+  - https://github.com/obbyworld/ObbyIRCd
+  - https://github.com/obbyworld/hosted-backend
+  - https://github.com/obbyworld/obby
+  - https://github.com/obbyworld/obby-stack
 maintainers:
   - name: ObsidianIRC

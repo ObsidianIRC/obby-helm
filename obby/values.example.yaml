@@ -12,7 +12,7 @@ global:
 obbyircd:
   enabled: true
   image:
-    repository: obbyirc/obbyircd
+    repository: obbyworld/obbyircd
     tag: "v0.1.0"
   replicas: 1
   operName: admin
@@ -32,7 +32,7 @@ obbyircd:
 obbyApi:
   enabled: true
   image:
-    repository: obbyirc/obby-api
+    repository: obbyworld/obby-api
     tag: "v0.1.0"
   jwtSecret: "REPLACE-WITH-openssl-rand-hex-32"
   ircServerKey: "REPLACE-WITH-openssl-rand-hex-32"
@@ -49,7 +49,7 @@ obbyApi:
 obbyWeb:
   enabled: true
   image:
-    repository: obbyirc/obby
+    repository: obbyworld/obby
     tag: "v0.1.0"
   replicas: 2
 

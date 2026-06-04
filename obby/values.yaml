@@ -11,7 +11,7 @@ global:
 obbyircd:
   enabled: true
   image:
-    repository: obbyirc/obbyircd
+    repository: obbyworld/obbyircd
     tag: ""        # default: chart appVersion
     pullPolicy: IfNotPresent
   replicas: 1
@@ -71,7 +71,7 @@ obbyircd:
 obbyApi:
   enabled: true
   image:
-    repository: obbyirc/obby-api
+    repository: obbyworld/obby-api
     tag: ""
     pullPolicy: IfNotPresent
   replicas: 1
@@ -105,7 +105,7 @@ obbyApi:
 obbyWeb:
   enabled: true
   image:
-    repository: obbyirc/obby
+    repository: obbyworld/obby
     tag: ""
     pullPolicy: IfNotPresent
   replicas: 2

@@ -2,7 +2,7 @@
 
 Helm chart for deploying the [Obby](https://github.com/ObsidianIRC) stack
 on Kubernetes. The Docker Compose equivalent lives in
-[obby-stack](https://github.com/ObsidianIRC/obby-stack).
+[obby-stack](https://github.com/obbyworld/obby-stack).
 
 This repo ships **one chart** (`obby/`) that deploys all three services
 (`obbyircd`, `obby-api`, `obby` web) with shared config and a single
@@ -11,7 +11,7 @@ ingress.
 ## Quick install
 
 ```bash
-helm repo add obby oci://ghcr.io/ObsidianIRC/charts
+helm repo add obby oci://ghcr.io/obbyworld/charts
 helm install obby obby/obby \
   --namespace obby --create-namespace \
   --set global.ircFqdn=irc.example.com \
