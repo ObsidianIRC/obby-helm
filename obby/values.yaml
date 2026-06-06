@@ -12,7 +12,7 @@ obbyircd:
   enabled: true
   image:
     repository: obbyworld/obbyircd
-    tag: ""        # default: chart appVersion
+    tag: "0.1.0"
     pullPolicy: IfNotPresent
   replicas: 1
   serverName: ""   # default: global.ircFqdn
@@ -72,7 +72,7 @@ obbyApi:
   enabled: true
   image:
     repository: obbyworld/obby-api
-    tag: ""
+    tag: "0.1.0"
     pullPolicy: IfNotPresent
   replicas: 1
   jwtSecret: ""
@@ -106,7 +106,7 @@ obbyWeb:
   enabled: true
   image:
     repository: obbyworld/obby
-    tag: ""
+    tag: "0.3.2"
     pullPolicy: IfNotPresent
   replicas: 2
   service:

@@ -13,7 +13,7 @@ obbyircd:
   enabled: true
   image:
     repository: obbyworld/obbyircd
-    tag: "v0.1.0"
+    tag: "0.1.0"
   replicas: 1
   operName: admin
   operPassword: "CHANGE-ME"
@@ -33,7 +33,7 @@ obbyApi:
   enabled: true
   image:
     repository: obbyworld/obby-api
-    tag: "v0.1.0"
+    tag: "0.1.0"
   jwtSecret: "REPLACE-WITH-openssl-rand-hex-32"
   ircServerKey: "REPLACE-WITH-openssl-rand-hex-32"
   turnSecret: "REPLACE-WITH-openssl-rand-hex-32"
@@ -50,7 +50,7 @@ obbyWeb:
   enabled: true
   image:
     repository: obbyworld/obby
-    tag: "v0.1.0"
+    tag: "0.3.2"
   replicas: 2
 
 ingress:

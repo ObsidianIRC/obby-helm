@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticCommits"
+  ],
+  "labels": ["dependencies"],
+  "enabledManagers": ["github-actions", "helm-values"],
+  "helm-values": {
+    "managerFilePatterns": ["/(^|/)values(\\.example)?\\.ya?ml$/"]
+  },
+  "packageRules": [
+    {
+      "description": "First-party obbyworld images: one PR per service, never auto-merge",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["obbyworld/**"],
+      "automerge": false,
+      "commitMessageTopic": "{{depName}}",
+      "addLabels": ["obbyworld-image"]
+    }
+  ]
+}
