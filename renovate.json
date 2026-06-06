@@ -6,7 +6,7 @@
     ":semanticCommits"
   ],
   "labels": ["dependencies"],
-  "enabledManagers": ["github-actions", "helm-values"],
+  "enabledManagers": ["helm-values"],
   "helm-values": {
     "managerFilePatterns": ["/(^|/)values(\\.example)?\\.ya?ml$/"]
   },
