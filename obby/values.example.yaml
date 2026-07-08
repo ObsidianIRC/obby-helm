@@ -50,7 +50,7 @@ obbyWeb:
   enabled: true
   image:
     repository: obbyworld/obby
-    tag: "0.3.2"
+    tag: "v0.3.3"
   replicas: 2
 
 ingress:
