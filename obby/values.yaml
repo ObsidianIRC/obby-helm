@@ -72,7 +72,7 @@ obbyApi:
   enabled: true
   image:
     repository: obbyworld/obby-api
-    tag: "0.1.0"
+    tag: "0.1.1"
     pullPolicy: IfNotPresent
   replicas: 1
   jwtSecret: ""
