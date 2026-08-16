@@ -13,7 +13,7 @@ obbyircd:
   enabled: true
   image:
     repository: obbyworld/obbyircd
-    tag: "0.1.0"
+    tag: "6.2.6"
   replicas: 1
   operName: admin
   operPassword: "CHANGE-ME"
